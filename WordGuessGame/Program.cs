@@ -1,5 +1,4 @@
-﻿using System.Linq;
-Random rd = new Random();
+﻿Random rd = new Random();
 //creates a word_list and generates a random word to be guessed
 string[] wordList = {"abruptly",
 "absurd",
@@ -183,48 +182,66 @@ string[] wordList = {"abruptly",
 "zipper",
 "zodiac",
 "zombie",};
-string guessWord = wordList[rd.Next(wordList.Length)];
-//Console.WriteLine(guessWord);
-string[] displayText = new string[guessWord.Length];
-for (int i = 0; i < guessWord.Length; i++)
-    displayText[i] = "_";
-int numTries = 6;
-bool endOfGame = false;
 
-Console.WriteLine("Welcome to the guessing game\nA random word will be generated and you are required to guess the letters");
-while (!endOfGame)
+char guessLetter()
 {
-    Console.Write("Guess a letter: ");
-    char guessLetter = Console.ReadKey().KeyChar;
-    Console.WriteLine();
+    char guess;
+    bool dataType;
+    do
+    {
+        Console.Write("Guess a letter: ");
+        guess = Char.ToLower(Console.ReadKey().KeyChar);
+        dataType = Char.IsLetter(guess);
+        Console.WriteLine();
+    }
+    while(dataType == false);
+    return guess;
+}
 
-    if (displayText.Contains(Convert.ToString(guessLetter)) == true)
+void Main()
+{
+    string guessWord = wordList[rd.Next(wordList.Length)];
+    //Console.WriteLine(guessWord);
+    string[] displayText = new string[guessWord.Length];
+    for (int i = 0; i < guessWord.Length; i++)
+        displayText[i] = "_";
+    int numTries = 6;
+    bool endOfGame = false;
+
+    Console.WriteLine("Welcome to the guessing game\nA random word will be generated and you are required to guess the letters");
+    while (!endOfGame)
     {
-        Console.WriteLine($"You have already guessed {guessLetter}");
-    }
-    for (int j = 0; j < guessWord.Length; j++)
-    {
-        if (guessLetter == guessWord[j])
+        char guessingLetter = guessLetter();
+
+        if (displayText.Contains(Convert.ToString(guessingLetter)) == true)
         {
-            displayText[j] = Convert.ToString(guessLetter);
-            Console.WriteLine(string.Join("", displayText));
+            Console.WriteLine($"You have already guessed {guessingLetter}");
         }
-    }
-    if (guessWord.Contains(guessLetter) == false)
-    {
-        numTries--;
-        Console.WriteLine($"{guessLetter} is incorrect, you have {numTries} tries left.");
-        if (numTries == 0)
+        for (int j = 0; j < guessWord.Length; j++)
         {
-            Console.WriteLine("You are out of tries.");
+            if (guessingLetter == guessWord[j])
+            {
+                displayText[j] = Convert.ToString(guessingLetter);
+                Console.WriteLine(string.Join("", displayText));
+            }
+        }
+        if (guessWord.Contains(guessingLetter) == false)
+        {
+            numTries--;
+            Console.WriteLine($"{guessingLetter} is incorrect, you have {numTries} tries left.");
+            if (numTries == 0)
+            {
+                Console.WriteLine("You are out of tries.");
+                Console.WriteLine($"The guess word is {guessWord}");
+                endOfGame = true;
+            }
+        }
+        if (displayText.Contains("_") == false)
+        {
+            Console.WriteLine("You have correctly guessed the word");
+            Console.WriteLine(string.Join("", displayText));
             endOfGame = true;
         }
-    }
-    if (displayText.Contains("_") == false)
-    {
-        Console.WriteLine("You have correctly guessed the word");
-        Console.WriteLine(string.Join("", displayText));
-        endOfGame = true;
     }
 }
 
@@ -232,4 +249,4 @@ while (!endOfGame)
 
 
 
-
+Main();
